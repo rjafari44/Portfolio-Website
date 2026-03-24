@@ -263,12 +263,11 @@
       <span class="meta-tag">C++</span>
       <span class="meta-tag">CLI</span>
       <span class="meta-tag">Qt (In Progress)</span>
-      <span class="meta-tag">OOP</span>
     </div>
     <p class="project-summary">
-      <!-- One or two sentences describing what this project is and why you built it. -->
-      A command-line inventory management system built in C++ with object-oriented design.
-      A Qt-based GUI is currently in development.
+      A command-line inventory management system for tracking precious metal holdings,
+      built in C++ with object-oriented design, input validation, and a clean two-level
+      menu interface. A Qt-based GUI is currently in development.
     </p>
   </div>
 
@@ -279,87 +278,184 @@
     <div class="project-section">
       <h2>Overview</h2>
       <p>
-        <!-- Describe the project in more depth. What problem does it solve? Who is it for?
-             What were your goals when building it? -->
-        Replace this with your project overview. Explain what the system does,
-        what motivated you to build it, and any high-level design goals.
+        This program lets a user manage a personal inventory of five precious metals —
+        Platinum, Gold, Diamond, Silver, and Copper — through a straightforward CLI.
+        Each metal has a maximum storage capacity of 100 kg, and users can deposit or
+        withdraw fractional amounts at any time. A balance summary screen shows all
+        five holdings at a glance.
+      </p>
+      <p>
+        I built this project as I was getting back into C++ after a break. The goal was
+        to practice clean code organization across multiple files, struct-based data
+        modeling, and robust input validation — things that are easy to skip in small
+        programs but matter a lot when codebases grow.
       </p>
 
-      <!-- Replace this placeholder with an actual screenshot or diagram -->
-      <div class="img-placeholder">
-        <span>Screenshot or diagram — replace src below</span>
-        <!-- To add an image, replace the div above with:
-        <img src="../assets/images/inventory-overview.png" alt="Inventory system overview" /> -->
-      </div>
+      <img src="../../assets/CLI_Opening.png" alt="CLI Intro Screenshot" style="width:100%; border-radius:3px; margin: 1.5rem 0; display:block;" />
+
     </div>
 
     <!-- DESIGN & ARCHITECTURE -->
     <div class="project-section">
       <h2>Design &amp; Architecture</h2>
       <p>
-        <!-- Explain your design decisions. Class structure, data storage approach,
-             how you organized the codebase, any patterns you used. -->
-        Describe the architecture here — class hierarchy, data structures used,
-        how the CLI interface is structured, etc.
+        The project is split across four <code>.cpp</code> files and a single shared
+        header. Keeping concerns separated — display logic, validation logic, transaction
+        logic, and the entry point — made each file easy to reason about independently.
+      </p>
+      <p>
+        All inventory data lives in a single <code>Inventory</code> struct, and the two
+        menu option sets are modeled as <code>enum</code> types so switch statements
+        read as named cases rather than magic numbers.
       </p>
 
       <div class="code-block">
         <pre>
-// Example: replace with a real snippet from your code
-class Item {
-public:
-    Item(std::string name, int quantity, double price);
-    void display() const;
-    // ...
-private:
-    std::string name;
-    int quantity;
-    double price;
-};</pre>
+// header.hpp — shared types and constants
+
+inline const int MAX_LIMIT { 100 };
+
+struct Inventory {
+  float platinum{}, gold{}, diamond{}, silver{}, copper{};
+};
+
+enum Metals    { EXIT, PLATINUM, GOLD, DIAMOND, SILVER, COPPER, BALANCE };
+enum Operation { QUIT, DEPOSIT, WITHDRAW, MAIN_MENU };</pre>
       </div>
-      <p class="code-caption">Item class definition — item.h</p>
+      <p>
+        Passing the <code>Inventory</code> struct by reference into display and
+        transaction functions means there is one authoritative copy of the data at all
+        times — no globals, no duplication.
+      </p>
     </div>
 
     <!-- KEY FEATURES -->
     <div class="project-section">
       <h2>Key Features</h2>
+
       <p>
-        <!-- Walk through the most interesting parts of the implementation.
-             Add as many sub-sections or code blocks as you need. -->
-        Describe a key feature here and explain how you implemented it.
+        <strong style="font-weight:500;color:var(--ink);">Two-level menu navigation.</strong>
+        The outer menu selects a metal; the inner menu handles the operation. Choosing
+        "Main Menu" from the inner loop breaks back to the outer one cleanly, while
+        "EXIT" terminates the program entirely. Each metal routes to the same
+        <code>manageInventory()</code> function, passing only the relevant float field
+        by reference — no duplication across five nearly-identical branches.
       </p>
 
       <div class="code-block">
         <pre>
-// Replace with a real code snippet that illustrates this feature
-void Inventory::addItem(const Item&amp; item) {
-    items.push_back(item);
-    saveToFile();
+// main.cpp — routing each metal to the same handler via reference
+switch (metalChoice) {
+  case PLATINUM: manageInventory(storage.platinum); break;
+  case GOLD:     manageInventory(storage.gold);     break;
+  case DIAMOND:  manageInventory(storage.diamond);  break;
+  case SILVER:   manageInventory(storage.silver);   break;
+  case COPPER:   manageInventory(storage.copper);   break;
+  case BALANCE:  displayTotalBalance(storage);      break;
+  case EXIT:
+    cout &lt;&lt; "\nThank you for using our services!\n";
+    return 0;
 }</pre>
       </div>
-      <p class="code-caption">Adding items and persisting to file — inventory.cpp</p>
+      <p>
+        <strong style="font-weight:500;color:var(--ink);">Input validation on every read.</strong>
+        Every <code>cin</code> call is guarded: if the stream enters a fail state (e.g.
+        the user types a letter where a number is expected), the error is cleared and the
+        bad input is discarded before prompting again. Numeric range is validated
+        separately in <code>validate.cpp</code>.
+      </p>
 
-      <div class="img-placeholder">
-        <span>Screenshot — replace with actual image</span>
+      <div class="code-block">
+        <pre>
+// perform_transaction.cpp — stream-fail guard pattern
+cin >> depoAmt;
+
+if (cin.fail()) {
+  cin.clear();
+  cin.ignore(1000, '\n');
+  cout &lt;&lt; "\nInvalid input. Please enter a number.\n";
+} else {
+  if (isValidDeposit(depoAmt, metalChoice)) {
+    metalChoice += depoAmt;
+    cout &lt;&lt; "\nNew Balance: " &lt;&lt; metalChoice &lt;&lt; "kg\n";
+  } else {
+    cout &lt;&lt; "\nInvalid deposit amount\n";
+  }
+}</pre>
       </div>
+      <p>
+        <strong style="font-weight:500;color:var(--ink);">Separated validation logic.</strong>
+        Deposit and withdrawal rules live in their own functions in
+        <code>validate.cpp</code>. Both return a boolean and take only the amount and
+        current balance as arguments, making them independently testable with no
+        side effects.
+      </p>
+
+      <div class="code-block">
+        <pre>
+// validate.cpp
+bool isValidDeposit(float depoAmt, float currentBalance) {
+  return (depoAmt > 0) &amp;&amp; ((depoAmt + currentBalance) &lt;= MAX_LIMIT);
+}
+
+bool isValidWithdrawal(float withdrawAmt, float currentBalance) {
+  return (withdrawAmt > 0) &amp;&amp; (withdrawAmt &lt;= currentBalance);
+}</pre>
+      </div>
+      <p>
+        <strong style="font-weight:500;color:var(--ink);">Sample Balance:</strong>
+      </p>
+      <img src="../../assets/Sample_Balance.png" alt="CLI Sample Balance" style="width:100%; border-radius:3px; margin: 1.5rem 0; display:block;" />
+
+    </div>
+
+    <!-- BUILDING & RUNNING -->
+    <div class="project-section">
+      <h2>Building &amp; Running</h2>
+      <p>
+        The project ships with both a <code>Makefile</code> and a shell script so it can
+        be compiled and run in a single command either way.
+      </p>
+
+      <div class="code-block">
+        <pre>
+# Using Make
+make
+make clean   # clean up compiled artifacts when done
+
+# Using the shell script (chmod first if needed)
+./run.sh</pre>
     </div>
 
     <!-- WHAT I LEARNED -->
     <div class="project-section">
       <h2>What I Learned</h2>
       <p>
-        <!-- Reflect on the project. What was challenging? What would you do differently?
-             What skills did it reinforce or teach you? -->
-        Replace this with your reflection on the project.
+        The biggest takeaway was how much clarity you get from splitting a program into
+        focused files early — even in a small project. Having <code>validate.cpp</code>
+        contain nothing but two pure functions made it trivial to audit and reason about
+        the correctness of the deposit and withdrawal logic in isolation.
+      </p>
+      <p>
+        I also reinforced the pattern of guarding every <code>cin</code> read with a
+        fail-state check. It is easy to skip when prototyping, but user input is
+        unpredictable and a single unguarded read can put the stream into a broken state
+        that silently corrupts subsequent reads.
+      </p>
+      <p>
+        If I were to extend this, I would add file persistence so balances survive
+        between sessions, and replace the raw <code>float</code> fields with a map from
+        a metal enum to balance — making it straightforward to add new metals without
+        touching the struct definition or the switch statement.
       </p>
     </div>
 
     <!-- GITHUB LINK -->
-    <a class="github-cta" href="https://github.com/rjafari44/YOUR-REPO-NAME" target="_blank">
+    <a class="github-cta" href="https://github.com/rjafari44/InventorySystem" target="_blank">
       <span class="github-cta-icon">gh</span>
       <span class="github-cta-body">
         <span class="github-cta-label">View Source</span>
-        <span class="github-cta-val">github.com/rjafari44/YOUR-REPO-NAME</span>
+        <span class="github-cta-val">github.com/rjafari44/InventorySystem</span>
       </span>
       <span class="github-cta-arrow">→</span>
     </a>
