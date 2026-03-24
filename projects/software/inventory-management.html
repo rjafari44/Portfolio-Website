@@ -346,12 +346,12 @@ enum Operation { QUIT, DEPOSIT, WITHDRAW, MAIN_MENU };</pre>
         <pre>
 // main.cpp — routing each metal to the same handler via reference
 switch (metalChoice) {
-  case PLATINUM: manageInventory(storage.platinum); break;
-  case GOLD:     manageInventory(storage.gold);     break;
-  case DIAMOND:  manageInventory(storage.diamond);  break;
-  case SILVER:   manageInventory(storage.silver);   break;
-  case COPPER:   manageInventory(storage.copper);   break;
-  case BALANCE:  displayTotalBalance(storage);      break;
+  case PLATINUM: manageInventory(storage.platinum, "platinum"); break;
+  case GOLD:     manageInventory(storage.gold, "gold");         break;
+  case DIAMOND:  manageInventory(storage.diamond, "diamond");   break;
+  case SILVER:   manageInventory(storage.silver, "silver");     break;
+  case COPPER:   manageInventory(storage.copper, "copper");     break;
+  case BALANCE:  displayTotalBalance(storage);                  break;
   case EXIT:
     cout &lt;&lt; "\nThank you for using our services!\n";
     return 0;
@@ -379,7 +379,7 @@ if (cin.fail()) {
     metalChoice += depoAmt;
     cout &lt;&lt; "\nNew Balance: " &lt;&lt; metalChoice &lt;&lt; "kg\n";
   } else {
-    cout &lt;&lt; "\nInvalid deposit amount\n";
+    cout &lt;&lt; "Invalid deposit amount!\n";
   }
 }</pre>
       </div>
