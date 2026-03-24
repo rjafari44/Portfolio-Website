@@ -138,10 +138,25 @@
     }
     .project-section p:last-child { margin-bottom: 0; }
 
+    /* MATH BLOCK */
+    .math-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1.2rem 1.6rem;
+      margin: 1.2rem 0;
+    }
+    .math-block p {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      line-height: 1.9;
+      color: var(--ink);
+      margin: 0;
+    }
+
     /* IMAGE PLACEHOLDER */
     .img-placeholder {
       width: 100%;
-      aspect-ratio: 16/9;
       background: var(--code-bg);
       border: 1px dashed var(--border);
       border-radius: 3px;
@@ -149,6 +164,7 @@
       align-items: center;
       justify-content: center;
       margin: 1.5rem 0;
+      padding: 3rem 0;
     }
     .img-placeholder span {
       font-family: var(--mono);
@@ -156,13 +172,6 @@
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--ink-3);
-    }
-    .img-placeholder img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 3px;
-      display: block;
     }
 
     /* CODE BLOCK */
@@ -180,14 +189,6 @@
       line-height: 1.65;
       color: var(--ink);
       white-space: pre;
-    }
-    .code-caption {
-      font-family: var(--mono);
-      font-size: 0.68rem;
-      letter-spacing: 0.08em;
-      color: var(--ink-3);
-      margin-top: 0.5rem;
-      text-transform: uppercase;
     }
 
     /* GITHUB LINK */
@@ -262,13 +263,13 @@
     <div class="project-meta">
       <span class="meta-tag">Python</span>
       <span class="meta-tag">DSP</span>
-      <span class="meta-tag">Audio Processing</span>
       <span class="meta-tag">NumPy</span>
+      <span class="meta-tag">SciPy</span>
     </div>
     <p class="project-summary">
-      <!-- One or two sentences describing what this project is and why you built it. -->
-      A command-line inventory management system built in C++ with object-oriented design.
-      A Qt-based GUI is currently in development.
+      A Python project demonstrating high-frequency noise reduction in audio signals
+      using a discrete-time LTI moving-average low-pass filter, with analysis in both
+      the time- and frequency-domains. Originally built as extra credit for a course.
     </p>
   </div>
 
@@ -279,87 +280,190 @@
     <div class="project-section">
       <h2>Overview</h2>
       <p>
-        <!-- Describe the project in more depth. What problem does it solve? Who is it for?
-             What were your goals when building it? -->
-        Replace this with your project overview. Explain what the system does,
-        what motivated you to build it, and any high-level design goals.
+        High-frequency noise in audio recordings reduces clarity and can interfere with
+        speech recognition, scientific measurement, and general listening quality.
+        This project simulates that problem: a clean audio sample is loaded, artificial
+        Gaussian noise is added to it, and a discrete-time LTI low-pass filter is then
+        applied to recover a cleaner version of the signal.
+      </p>
+      <p>
+        The results are visualized in both the time-domain and frequency-domain, with
+        side-by-side comparisons at each stage — clean vs noisy, and clean vs filtered.
+        The audio used for testing was a short recording of my own voice.
       </p>
 
-      <!-- Replace this placeholder with an actual screenshot or diagram -->
-      <div class="img-placeholder">
-        <span>Screenshot or diagram — replace src below</span>
-        <!-- To add an image, replace the div above with:
-        <img src="../assets/images/dsp-overview.png" alt="Inventory system overview" /> -->
-      </div>
+      <img src="../../assets/LTI_System_block_diagram.png" alt="LTI Block Diagram" style="width:100%; border-radius:3px; margin: 1.5rem 0; display:block; border: 1px solid #e0deda;" />
     </div>
 
-    <!-- DESIGN & ARCHITECTURE -->
+    <!-- PROBLEM DEFINITION -->
     <div class="project-section">
-      <h2>Design &amp; Architecture</h2>
+      <h2>Problem Definition</h2>
       <p>
-        <!-- Explain your design decisions. Class structure, data storage approach,
-             how you organized the codebase, any patterns you used. -->
-        Describe the architecture here — class hierarchy, data structures used,
-        how the CLI interface is structured, etc.
+        The system models a noisy input signal as the sum of a clean audio signal and
+        additive high-frequency noise. A moving-average filter is then applied via
+        discrete convolution to attenuate the noise.
+      </p>
+
+      <div class="math-block">
+        <p>x[n] = s[n] + n[n]          &nbsp;&nbsp;  (noisy input)</p>
+        <p>h[n] = 1/N,  n = 0, 1, ..., N-1 &nbsp;&nbsp; (filter impulse response)</p>
+        <p>y[n] = x[n] * h[n]          &nbsp;&nbsp;  (filtered output via convolution)</p>
+      </div>
+
+      <p>
+        N is the filter length — it controls how many samples are averaged together.
+        A larger N means stronger high-frequency attenuation but more smoothing of the
+        original signal. The noise amplitude parameter controls how loud the added
+        static is before filtering.
+      </p>
+    </div>
+
+    <!-- IMPLEMENTATION -->
+    <div class="project-section">
+      <h2>Implementation</h2>
+
+      <p>
+        <strong style="font-weight:500;color:var(--ink);">Loading and preprocessing.</strong>
+        The audio file is read into a NumPy array using <code>soundfile</code>. Since
+        some recordings are stereo, the script checks the number of dimensions and
+        averages both channels down to mono if needed, ensuring the signal is always 1D
+        before processing.
       </p>
 
       <div class="code-block">
         <pre>
-// Example: replace with a real snippet from your code
-class Item {
-public:
-    Item(std::string name, int quantity, double price);
-    void display() const;
-    // ...
-private:
-    std::string name;
-    int quantity;
-    double price;
-};</pre>
-      </div>
-      <p class="code-caption">Item class definition — item.h</p>
-    </div>
+signal_clean, sample_rate = sf.read(audio_file)
 
-    <!-- KEY FEATURES -->
-    <div class="project-section">
-      <h2>Key Features</h2>
+# convert stereo to mono if needed
+if signal_clean.ndim == 2:
+    signal_clean = signal_clean.mean(axis=1)</pre>
+      </div>
+
       <p>
-        <!-- Walk through the most interesting parts of the implementation.
-             Add as many sub-sections or code blocks as you need. -->
-        Describe a key feature here and explain how you implemented it.
+        <strong style="font-weight:500;color:var(--ink);">Adding noise.</strong>
+        Gaussian noise is generated with <code>np.random.randn</code> and scaled by a
+        noise amplitude constant. The noisy signal is clipped to the valid
+        range of [-1, 1] to prevent distortion when saving as a <code>.wav</code> file.
       </p>
 
       <div class="code-block">
         <pre>
-// Replace with a real code snippet that illustrates this feature
-void Inventory::addItem(const Item&amp; item) {
-    items.push_back(item);
-    saveToFile();
-}</pre>
-      </div>
-      <p class="code-caption">Adding items and persisting to file — inventory.cpp</p>
+noise_amp = 0.05
+noise = noise_amp * np.random.randn(len(signal_clean))
 
-      <div class="img-placeholder">
-        <span>Screenshot — replace with actual image</span>
+signal_noisy = signal_clean + noise
+signal_noisy = np.clip(signal_noisy, -1.0, 1.0)</pre>
       </div>
+
+      <p>
+        <strong style="font-weight:500;color:var(--ink);">Applying the filter.</strong>
+        The moving-average filter is constructed as an impulse response array of length
+        N, then applied to the noisy signal via <code>np.convolve</code> with
+        <code>mode='same'</code> to preserve the original signal length.
+      </p>
+
+      <div class="code-block">
+        <pre>
+N = 5
+h = np.ones(N) / N   # impulse response: h[n] = 1/N
+
+signal_filtered = np.convolve(signal_noisy, h, mode='same')
+signal_filtered = np.clip(signal_filtered, -1.0, 1.0)</pre>
+      </div>
+
+      <p>
+        <strong style="font-weight:500;color:var(--ink);">Frequency-domain analysis.</strong>
+        FFTs are computed for the clean, noisy, and filtered signals using
+        <code>np.fft.fft</code>. Magnitudes are converted to decibels for plotting —
+        the linear scale made the clean and noisy spectra look nearly identical, so the
+        logarithmic scale was necessary to reveal the actual differences.
+      </p>
+
+      <div class="code-block">
+        <pre>
+fft_clean  = np.fft.fft(signal_clean)
+fft_noisy  = np.fft.fft(signal_noisy)
+fft_filtered = np.fft.fft(signal_filtered)
+
+freqs = np.fft.fftfreq(len(signal_noisy), 1 / sample_rate)
+
+# plot magnitude in dB (log scale)
+20 * np.log10(np.abs(fft_noisy)[:len(freqs)//2] + 1e-12)</pre>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="project-section">
+      <h2>Results</h2>
+
+      <p>
+        <strong style="font-weight:500;color:var(--ink);">Time-domain — clean vs noisy.</strong>
+        The noisy signal retains the same overall waveform shape as the clean signal,
+        but shows a noticeably increased amplitude spread across all samples due to the
+        added Gaussian noise.
+      </p>
+
+      <img src="../../assets/time_domain_clean_vs_noisy.png" alt="Time-domain: clean vs noisy" style="width:100%; border-radius:3px; margin: 1.5rem 0; display:block; border: 1px solid #e0deda;" />
+
+      <p>
+        <strong style="font-weight:500;color:var(--ink);">Time-domain — clean vs filtered.</strong>
+        After filtering, the amplitude spread is significantly reduced compared to the
+        noisy signal, though it does not fully return to the clean signal's amplitude —
+        a trade-off of the moving-average approach.
+      </p>
+
+      <img src="../../assets/time_domain_clean_vs_filtered.png" alt="Time-domain: clean vs filtered" style="width:100%; border-radius:3px; margin: 1.5rem 0; display:block; border: 1px solid #e0deda;" />
+
+      <p>
+        <strong style="font-weight:500;color:var(--ink);">Frequency-domain — clean vs noisy.</strong>
+        On a logarithmic scale, the noisy signal shows a larger spread of magnitudes
+        compared to the clean signal, and that elevated noise floor persists across
+        higher frequencies.
+      </p>
+
+      <img src="../../assets/frequency_domain_clean_vs_noisy.png" alt="frequency-domain: clean vs noisy" style="width:100%; border-radius:3px; margin: 1.5rem 0; display:block; border: 1px solid #e0deda;" />
+
+      <p>
+        <strong style="font-weight:500;color:var(--ink);">Frequency-domain — clean vs filtered.</strong>
+        The filtered signal's magnitude range closely matches the clean signal, but
+        introduces a new phenomenon: periodic nulls in the spectrum caused by the zeros
+        of the moving-average filter's frequency response. These produce a sinusoidal
+        ripple pattern across the spectrum — a known characteristic of this filter type.
+      </p>
+
+      <img src="../../assets/frequency_domain_clean_vs_filtered.png" alt="frequency-domain: clean vs noisy" style="width:100%; border-radius:3px; margin: 1.5rem 0; display:block; border: 1px solid #e0deda;" />
     </div>
 
     <!-- WHAT I LEARNED -->
     <div class="project-section">
       <h2>What I Learned</h2>
       <p>
-        <!-- Reflect on the project. What was challenging? What would you do differently?
-             What skills did it reinforce or teach you? -->
-        Replace this with your reflection on the project.
+        The most interesting result was the spectral nulls introduced by the
+        moving-average filter. Going in, I expected cleaner output to simply mean a
+        flatter, lower noise floor — seeing the periodic cancellation pattern in the
+        frequency domain made the theoretical behavior of FIR filter zeros concrete
+        in a way that reading about it hadn't.
+      </p>
+      <p>
+        I also learned that the linear frequency-domain plots were essentially useless
+        for this analysis — the differences only became visible after switching to a
+        logarithmic (dB) scale. That was a practical lesson in choosing the right
+        representation for the data you're trying to inspect.
+      </p>
+      <p>
+        If I extended this project, I'd experiment with a proper windowed FIR filter
+        (e.g. a Hamming-windowed sinc) to get a sharper frequency cutoff without the
+        spectral nulls, and add a parameter sweep to visualize how filter length N
+        affects the trade-off between noise reduction and signal preservation.
       </p>
     </div>
 
     <!-- GITHUB LINK -->
-    <a class="github-cta" href="https://github.com/rjafari44/dsp-audio-filtering" target="_blank">
+    <a class="github-cta" href="https://github.com/rjafari44/audio-filtering" target="_blank">
       <span class="github-cta-icon">gh</span>
       <span class="github-cta-body">
         <span class="github-cta-label">View Source</span>
-        <span class="github-cta-val">github.com/rjafari44/dsp-audio-filtering</span>
+        <span class="github-cta-val">github.com/rjafari44/audio-filtering</span>
       </span>
       <span class="github-cta-arrow">→</span>
     </a>
