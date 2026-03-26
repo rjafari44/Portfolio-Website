@@ -117,7 +117,6 @@
       margin: 0 auto;
       padding: 0 2rem 6rem;
     }
-
     .project-section {
       margin-bottom: 4rem;
     }
@@ -146,8 +145,10 @@
       border: 1px dashed var(--border);
       border-radius: 3px;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 0.4rem;
       margin: 1.5rem 0;
     }
     .img-placeholder span {
@@ -157,12 +158,13 @@
       text-transform: uppercase;
       color: var(--ink-3);
     }
-    .img-placeholder img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 3px;
-      display: block;
+    .img-placeholder .img-hint {
+      font-family: var(--mono);
+      font-size: 0.63rem;
+      color: var(--ink-3);
+      opacity: 0.6;
+      text-transform: none;
+      letter-spacing: 0;
     }
 
     /* CODE BLOCK */
@@ -188,6 +190,38 @@
       color: var(--ink-3);
       margin-top: 0.5rem;
       text-transform: uppercase;
+    }
+
+    /* CLASSIFICATION TABLE */
+    .classify-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.4rem 0;
+      font-size: 0.88rem;
+    }
+    .classify-table th {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-align: left;
+      padding: 0.55rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .classify-table td {
+      font-family: var(--sans);
+      font-weight: 300;
+      color: var(--ink-2);
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .classify-table tr:last-child td { border-bottom: none; }
+    .classify-table td:first-child {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--ink);
+      white-space: nowrap;
     }
 
     /* GITHUB LINK */
@@ -263,12 +297,13 @@
       <span class="meta-tag">Python</span>
       <span class="meta-tag">Signals &amp; Systems</span>
       <span class="meta-tag">Matplotlib</span>
+      <span class="meta-tag">SciPy</span>
       <span class="meta-tag">EE</span>
     </div>
     <p class="project-summary">
-      <!-- One or two sentences describing what this project is and why you built it. -->
-      A command-line inventory management system built in C++ with object-oriented design.
-      A Qt-based GUI is currently in development.
+      A command-line tool that accepts a transfer function in factored, distributed, or mixed form,
+      then plots the Bode magnitude and phase response. Automatically detects and labels the filter
+      type up to 3rd order.
     </p>
   </div>
 
@@ -279,17 +314,22 @@
     <div class="project-section">
       <h2>Overview</h2>
       <p>
-        <!-- Describe the project in more depth. What problem does it solve? Who is it for?
-             What were your goals when building it? -->
-        Replace this with your project overview. Explain what the system does,
-        what motivated you to build it, and any high-level design goals.
+        Bode Plot Calculator takes a transfer function H(s) — entered as a plain text expression
+        at the command line — and produces accurate magnitude and phase plots using matplotlib and
+        scipy. The goal was to make frequency-domain analysis fast and frictionless: no GUI to open,
+        no coefficient arrays to manually type out, just the expression as you'd write it on paper.
+      </p>
+      <p>
+        The script parses factored forms like <code>0.2(s + 10)(s + 2)</code>, distributed forms
+        like <code>s^2 + 3s + 1</code>, and any mix of the two. Asterisks are optional, missing
+        terms are filled in automatically, and if a typo is detected the script prompts you to
+        re-enter rather than crashing.
       </p>
 
-      <!-- Replace this placeholder with an actual screenshot or diagram -->
-      <div class="img-placeholder">
-        <span>Screenshot or diagram — replace src below</span>
-        <!-- To add an image, replace the div above with:
-        <img src="../assets/images/bode-overview.png" alt="Inventory system overview" /> -->
+      <p style="font-weight:500;color:var(--ink);margin-bottom:0.5rem;">Sample Graphs: H(s) = 1 / (s + 5), 1st Order Low-Pass</p>
+      <div style="display:flex;gap:1rem;margin:1.5rem 0;">
+        <img src="../../assets/Bode_Plot_Magnitude.png" alt="Magnitude plot" style="width:50%;border-radius:3px;" />
+        <img src="../../assets/Bode_Plot_Phase.png" alt="Phase plot" style="width:50%;border-radius:3px;" />
       </div>
     </div>
 
@@ -297,69 +337,133 @@
     <div class="project-section">
       <h2>Design &amp; Architecture</h2>
       <p>
-        <!-- Explain your design decisions. Class structure, data storage approach,
-             how you organized the codebase, any patterns you used. -->
-        Describe the architecture here — class hierarchy, data structures used,
-        how the CLI interface is structured, etc.
+        The script is organized around two parsing stages and a classification stage, all feeding
+        into a scipy <code>TransferFunction</code> object that drives the plot.
+      </p>
+      <p>
+        <code>parse_distributed()</code> handles a single expanded polynomial string, splitting on
+        sign boundaries and building a coefficient array in descending power order.
+        <code>parse_expression()</code> is the top-level entry point: it strips any leading scalar,
+        then either delegates directly to <code>parse_distributed()</code> for plain polynomials,
+        or tokenises parenthesised factors and multiplies them together via <code>np.polymul</code>.
       </p>
 
       <div class="code-block">
         <pre>
-// Example: replace with a real snippet from your code
-class Item {
-public:
-    Item(std::string name, int quantity, double price);
-    void display() const;
-    // ...
-private:
-    std::string name;
-    int quantity;
-    double price;
-};</pre>
+def parse_expression(expr):
+    expr = expr.replace(" ", "").replace("**", "^")
+
+    # Extract optional leading scalar (e.g. the 0.2 in 0.2(s+10))
+    scalar = 1.0
+    scalar_match = re.match(r'^([+-]?\d*\.?\d+)\*?(?=[\(s])', expr)
+    if scalar_match:
+        scalar = float(scalar_match.group(1))
+        expr = expr[scalar_match.end():]
+
+    if '(' not in expr:
+        return parse_distributed(expr, scalar=scalar).tolist()
+
+    # Tokenise into bare 's', 's^n', or '(...)' groups — then
+    # multiply all factors together into a single coefficient array
+    tokens = re.findall(r's\^\d+|s(?!\^)|\([^)]+\)', expr)
+    poly = np.array([scalar])
+    for token in tokens:
+        ...
+        poly = np.polymul(poly, factor)
+
+    return poly.tolist()</pre>
       </div>
-      <p class="code-caption">Item class definition — item.h</p>
+
+      <p>
+        Once both coefficient arrays are ready, scipy's <code>signal.bode()</code> computes the
+        frequency response and matplotlib renders separate figures for magnitude (dB) and phase
+        (degrees), both on a logarithmic frequency axis.
+      </p>
     </div>
 
     <!-- KEY FEATURES -->
     <div class="project-section">
       <h2>Key Features</h2>
       <p>
-        <!-- Walk through the most interesting parts of the implementation.
-             Add as many sub-sections or code blocks as you need. -->
-        Describe a key feature here and explain how you implemented it.
+        The parser accepts expressions in any combination of factored and distributed form. Terms
+        don't need to be in order and missing powers are filled in automatically — entering
+        <code>s^3 + 1</code> is valid without specifying the zero coefficients in between.
       </p>
 
       <div class="code-block">
         <pre>
-// Replace with a real code snippet that illustrates this feature
-void Inventory::addItem(const Item&amp; item) {
-    items.push_back(item);
-    saveToFile();
-}</pre>
-      </div>
-      <p class="code-caption">Adding items and persisting to file — inventory.cpp</p>
+# All of the following are valid inputs
 
-      <div class="img-placeholder">
-        <span>Screenshot — replace with actual image</span>
+Factored:      0.2(s + 10)(s + 2)
+Distributed:   s^5 + 5s^4 + 3s + 1
+Mixed:         0.2(s + 10)(s^2 + 3s + 2)
+Bare s:        s(s + 2)
+No asterisk:   0.2(s+10)   ≡   0.2*(s+10)</pre>
       </div>
+
+      <p>
+        After parsing, <code>classify_filter()</code> inspects the roots of the numerator and
+        denominator to detect integrators (pole at s = 0), differentiators (zero at s = 0), and
+        right-half-plane zeros, then maps the polynomial orders to a filter label shown in the plot
+        title. Classification is supported up to 3rd order; above that the Bode plot still renders
+        correctly but no label is produced.
+      </p>
+
+      <table class="classify-table">
+        <thead>
+          <tr>
+            <th>Denominator Order</th>
+            <th>Classifications</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1st order</td>
+            <td>Low-Pass, High-Pass / Shelving</td>
+          </tr>
+          <tr>
+            <td>2nd order</td>
+            <td>Low-Pass, Band-Pass, High-Pass / Notch, Notch (Non-Minimum Phase)</td>
+          </tr>
+          <tr>
+            <td>3rd order</td>
+            <td>Low-Pass, Low-Pass / Band-Pass, Band-Pass, High-Pass / Shelving</td>
+          </tr>
+          <tr>
+            <td>Any order</td>
+            <td>Integrator / Low-Pass, Differentiator / High-Pass, Band-Pass (Integrator + Differentiator)</td>
+          </tr>
+          <tr>
+            <td>Above 3rd</td>
+            <td>Plot renders accurately — filter label not supported</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <!-- WHAT I LEARNED -->
     <div class="project-section">
       <h2>What I Learned</h2>
       <p>
-        <!-- Reflect on the project. What was challenging? What would you do differently?
-             What skills did it reinforce or teach you? -->
-        Replace this with your reflection on the project.
+        Writing a robust expression parser from scratch — without a symbolic math library — pushed
+        me to think carefully about edge cases: implicit coefficients, optional asterisks, mixed
+        factored and distributed forms, and duplicate powers. Regex alone isn't enough; the real
+        work is in correctly combining the tokenised factors via polynomial multiplication.
+      </p>
+      <p>
+        The classification logic was a good exercise in translating control-theory knowledge into
+        code: deciding what pole and zero conditions uniquely identify a filter type, handling
+        integrators and differentiators as cross-cutting concerns, and knowing where to draw the
+        line on automated classification rather than produce a misleading label.
       </p>
     </div>
 
     <!-- GITHUB LINK -->
-    <a class="github-cta" href="https://github.com/rjafari44/bode-plot-calculator" target="_blank">
+    <a class="github-cta" href="https://github.com/rjafari44/BodePlotCalculator" target="_blank">
       <span class="github-cta-icon">gh</span>
       <span class="github-cta-body">
         <span class="github-cta-label">View Source</span>
-        <span class="github-cta-val">github.com/rjafari44/bode-plot-calculator</span>
+        <span class="github-cta-val">github.com/rjafari44/BodePlotCalculator</span>
       </span>
       <span class="github-cta-arrow">→</span>
     </a>
