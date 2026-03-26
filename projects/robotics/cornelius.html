@@ -43,6 +43,23 @@
 
     .placeholder-banner { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); padding: 1.2rem 1.5rem; border-radius: 2px; margin: 2rem 0; font-family: var(--mono); font-size: 0.75rem; color: var(--ink-3); letter-spacing: 0.05em; }
 
+    .code-block { background: #f0efe9; border: 1px solid var(--border); border-radius: 3px; padding: 1.4rem 1.6rem; margin: 1.2rem 0; overflow-x: auto; }
+    .code-block pre { font-family: var(--mono); font-size: 0.82rem; line-height: 1.65; color: var(--ink); white-space: pre; }
+
+    .move-table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; font-size: 0.85rem; }
+    .move-table th { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); text-align: left; padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--border); }
+    .move-table td { font-family: var(--mono); font-size: 0.8rem; color: var(--ink-2); padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--border); }
+    .move-table tr:last-child td { border-bottom: none; }
+    .move-table td:first-child { color: var(--ink); font-family: var(--sans); font-size: 0.85rem; }
+
+    .github-cta { display: flex; align-items: center; gap: 1rem; padding: 1.4rem 1.6rem; border: 1px solid var(--border); border-radius: 3px; background: #fff; text-decoration: none; color: var(--ink); transition: border-color 0.2s, background 0.2s; margin-top: 3rem; }
+    .github-cta:hover { border-color: var(--ink-3); background: var(--bg); }
+    .github-cta-icon { font-family: var(--mono); font-size: 0.75rem; color: var(--ink-3); width: 2rem; }
+    .github-cta-body { flex: 1; }
+    .github-cta-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); display: block; }
+    .github-cta-val { font-size: 0.9rem; color: var(--ink); }
+    .github-cta-arrow { font-family: var(--mono); font-size: 0.8rem; color: var(--ink-3); }
+
     footer { text-align: center; padding: 2rem 3rem; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 0.68rem; color: var(--ink-3); letter-spacing: 0.08em; }
 
     @media (max-width: 760px) {
@@ -73,39 +90,107 @@
     <div class="tag-row">
       <span class="tag">Arduino</span>
       <span class="tag">C++</span>
-      <span class="tag">Ultrasonic Sensors</span>
+      <span class="tag">Ultrasonic Sensor</span>
+      <span class="tag">Servo</span>
       <span class="tag">Autonomous Navigation</span>
       <span class="tag">Motor Control</span>
       <span class="tag">Embedded Systems</span>
+      <span class="tag">3D Printing</span>
     </div>
 
     <h2>Overview</h2>
     <p>
-      Cornelius is a self-navigating wheeled rover I built from scratch on an Arduino platform. It uses ultrasonic sensors to detect obstacles in real time and autonomously reroute — no remote control, no pre-programmed paths. The robot makes its own decisions.
+      Cornelius is a self-navigating wheeled rover built from scratch on an Arduino Nano. It uses an HC-SR04 ultrasonic sensor mounted on a micro servo to scan for obstacles in real time and autonomously reroute — no remote control, no pre-programmed paths. The robot makes its own decisions.
     </p>
     <p>
-      This was a solo project designed to build fluency in embedded C++ programming, sensor integration, and the real-world challenge of making a physical machine behave reliably on its own.
+      The chassis and wheels are custom 3D printed in PLA. The project spans mechanical design, electrical wiring, and embedded C++ programming — all done solo.
     </p>
 
-    <h2>How It Works</h2>
+    <p style="font-weight:500;color:var(--ink);margin-bottom:0.5rem;">Rover</p>
+    <img src="../../assets/rover.jpg" alt="Cornelius rover" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;" />
+
+    <h2>Mechanical</h2>
+    <p>
+      The chassis is custom-designed and printed in PLA. The wheels are inspired by a design from Prof. Wolken at Irvine Valley College. The chassis includes ziptie routing holes for motors and wiring, a servo bracket, and mounting tabs for the breadboard, motor driver, and battery holder.
+    </p>
     <ul>
-      <li>Ultrasonic distance sensors continuously scan ahead for obstacles within a set threshold.</li>
-      <li>When an obstacle is detected, the rover stops, evaluates clearance to the left and right, and steers around it.</li>
-      <li>DC motors are driven via an H-bridge motor driver, controlled directly from Arduino PWM outputs.</li>
-      <li>Logic is written entirely in C++ and runs on the Arduino's onboard microcontroller with no external dependencies.</li>
+      <li>Front wheels mounted to TT motors with zipties; rear wheels attached via nails through a mounting bracket.</li>
+      <li>Servo bracket is slightly loose — tape or a small shim keeps it secure.</li>
+      <li>Ultrasonic sensor bracket sourced online and reinforced with screws and washers.</li>
+      <li>MG90 metal gear servo used — an SG90 works fine and is recommended for this application.</li>
     </ul>
+
+    <p style="font-weight:500;color:var(--ink);margin-bottom:0.5rem;">Assembly</p>
+    <img src="../../assets/rover_assmebly.png" alt="Onshape assembly" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;" />
+
+    <h2>Electrical</h2>
+    <p>
+      Powered by two 18650 Li-ion batteries in series (~8 V total). The Arduino Nano and L298N motor driver have built-in 5 V regulators which power the HC-SR04 and servo. A 470 µF capacitor across the power rail smooths voltage spikes from motor switching.
+    </p>
+    <ul>
+      <li>TT motors run at 3–6 V — voltage drop across the L298N brings them into safe range.</li>
+      <li>Total current draw kept well under 2 A.</li>
+      <li>Dupont jumper wires used throughout — solid connections are critical to avoid intermittent failures.</li>
+    </ul>
+
+    <p style="font-weight:500;color:var(--ink);margin-bottom:0.5rem;">Circuit Schematic</p>
+    <img src="../../assets/schematic.png" alt="Circuit schematic" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;" />
+
+    <h2>How It Works</h2>
+    <p>
+      The main loop continuously reads distance from the ultrasonic sensor. If the path is clear it drives forward. When an obstacle is detected within 20 cm, it stops, backs up briefly, then sweeps the servo left and right to measure clearance on both sides before turning toward the more open direction.
+    </p>
+
+    <div class="code-block">
+      <pre>// Run obstacle avoidance only if an obstacle is actually detected
+if (obstacleDetected) {
+  stopMotors();
+
+  moveBackward();
+  delay(300);
+  stopMotors();
+
+  leftDist  = lookLeft();
+  rightDist = lookRight();
+
+  if (leftDist > rightDist) turnLeft();
+  else                      turnRight();
+
+  delay(400);
+  stopMotors();
+}</pre>
+    </div>
+
+    <h2>Movement Logic</h2>
+    <table class="move-table">
+      <thead>
+        <tr><th>Movement</th><th>IN1</th><th>IN2</th><th>IN3</th><th>IN4</th><th>ENA</th><th>ENB</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Forward</td><td>1</td><td>0</td><td>1</td><td>0</td><td>PWM</td><td>PWM</td></tr>
+        <tr><td>Backward</td><td>0</td><td>1</td><td>0</td><td>1</td><td>PWM</td><td>PWM</td></tr>
+        <tr><td>Turn Left</td><td>0</td><td>1</td><td>1</td><td>0</td><td>PWM</td><td>PWM</td></tr>
+        <tr><td>Turn Right</td><td>1</td><td>0</td><td>0</td><td>1</td><td>PWM</td><td>PWM</td></tr>
+        <tr><td>Stop</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
 
     <h2>What I Learned</h2>
     <p>
-      Working on Cornelius sharpened my ability to write clean embedded code under tight hardware constraints, think through edge cases in autonomous behavior (what happens when both sides are blocked?), and debug physical systems where software issues and mechanical issues can look identical.
+      This project sharpened my ability to write clean embedded C++ under tight hardware constraints, think through edge cases in autonomous behavior, and debug physical systems where software issues and mechanical issues can look identical. Structuring the code across multiple <code>.cpp</code> files with a shared header was also good practice for keeping embedded projects organized.
     </p>
 
-    <div class="placeholder-banner">
-      📎 Source code, wiring diagram, and demo video coming soon.
-    </div>
+    <a class="github-cta" href="https://github.com/rjafari44/ultrasonic_Rover" target="_blank">
+      <span class="github-cta-icon">gh</span>
+      <span class="github-cta-body">
+        <span class="github-cta-label">View Source</span>
+        <span class="github-cta-val">github.com/rjafari44/Cornelius-Autonomous-Rover</span>
+      </span>
+      <span class="github-cta-arrow">→</span>
+    </a>
 
   </div>
 
-  <footer>© 2025 Radin Jafari</footer>
+  <footer>© 2026 Radin Jafari</footer>
 </body>
 </html>
