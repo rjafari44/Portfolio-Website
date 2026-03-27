@@ -669,13 +669,6 @@
 }</pre>
       </div>
 
-      <!-- Demo video — manual -->
-      <div class="media-placeholder">
-        <div class="ph-icon">▶</div>
-        <div class="ph-label">Demo video — Manual joystick control</div>
-        <div class="ph-label">Coming soon</div>
-      </div>
-
       <!-- GESTURE MODE -->
       <h3>Mode B — Vision-Based Gesture Control</h3>
       <p>
@@ -812,6 +805,25 @@ gesture_buffer  = deque(maxlen=STABLE_FRAMES)
 
 cap.release(); ser.close(); cv2.destroyAllWindows()</pre>
       </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Demo Video -->
+    <div class="section-block">
+      <p class="section-label">05 — Demo</p>
+      <h2>Manual Control In Action</h2>
+
+      <!-- Demo video — manual -->
+      <div class="media-placeholder">
+        <div class="ph-icon">▶</div>
+        <div class="ph-label">Demo video — Manual joystick control</div>
+        <div class="ph-label">Coming soon</div>
+      </div>
+      
+      <br>
+
+      <h2>Gesture Control In Action</h2>
 
       <!-- Demo video — gesture -->
       <div class="media-placeholder">
@@ -820,51 +832,6 @@ cap.release(); ser.close(); cv2.destroyAllWindows()</pre>
         <div class="ph-label">Coming soon</div>
       </div>
 
-    </div>
-
-    <hr class="divider">
-
-    <!-- USAGE -->
-    <div class="section-block">
-      <p class="section-label">05 — Usage</p>
-      <h2>Running the System</h2>
-      <p>
-        The project targets Linux with Arduino CLI. Shell scripts handle compilation and upload to <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">/dev/ttyACM0</code> — if your board uses a different port, update both the shell scripts and the Python serial connection string. CDC on boot is enabled by default. The two modes are fully independent; upload the appropriate firmware before running.
-      </p>
-
-      <div class="callout">
-        <strong>Gesture control only:</strong> Exit the Serial Monitor after uploading firmware. The Python script needs exclusive access to the serial port.
-      </div>
-
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-filename">terminal</span>
-          <span class="code-lang">Shell</span>
-        </div>
-        <pre><span class="cm"># Verify connected port</span>
-arduino-cli board list
-
-<span class="cm"># Run manual mode</span>
-./runManual.sh
-
-<span class="cm"># Run gesture control mode</span>
-./runGesture.sh
-python obj_Detect.py</pre>
-      </div>
-
-      <h3>Python Dependencies</h3>
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-filename">requirements.txt</span>
-          <span class="code-lang">Python 3.10.x</span>
-        </div>
-        <pre>mediapipe==<span class="num">0.10.11</span>
-opencv-python==<span class="num">4.13.0.92</span>
-numpy==<span class="num">2.2.6</span>
-protobuf==<span class="num">3.20.3</span>
-pyserial==<span class="num">3.5</span></pre>
-      </div>
-    </div>
 
     <hr class="divider">
 
