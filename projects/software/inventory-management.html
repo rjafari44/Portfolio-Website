@@ -61,7 +61,7 @@
     .divider { border: none; border-top: 1px solid var(--border); margin: 3rem 0; }
 
     .code-block { background: var(--code-bg); border-radius: 6px; margin: 1.5rem 0 2rem; overflow: hidden; }
-    .code-header { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 1rem; background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .code-common { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 1rem; background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.07); }
     .code-filename { font-family: var(--mono); font-size: 0.68rem; color: rgba(255,255,255,0.45); letter-spacing: 0.08em; }
     .code-lang { font-family: var(--mono); font-size: 0.62rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; }
     .code-block pre { margin: 0; padding: 1.4rem 1.2rem; overflow-x: auto; line-height: 1.65; font-family: var(--mono); font-size: 0.78rem; color: var(--code-ink); }
@@ -134,11 +134,11 @@
       <p class="section-label">01 — Design & Architecture</p>
       <h2>File Structure & Data Modeling</h2>
       <p>
-        The project is split across four <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">.cpp</code> files and a single shared header. All inventory data lives in a single <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">Inventory</code> struct, and the two menu option sets are modeled as <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">enum</code> types so switch statements read as named cases rather than magic numbers.
+        The project is split across four <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">.cpp</code> files and a single shared common header. All inventory data lives in a single <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">Inventory</code> struct, and the two menu option sets are modeled as <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">enum</code> types so switch statements read as named cases rather than magic numbers.
       </p>
       <div class="code-block">
-        <div class="code-header">
-          <span class="code-filename">header.hpp</span>
+        <div class="code-common">
+          <span class="code-filename">common.hpp</span>
           <span class="code-lang">C++</span>
         </div>
         <pre><span class="cm">// Shared types and constants</span>
@@ -169,7 +169,7 @@
         The outer menu selects a metal; the inner menu handles the operation. Each metal routes to the same <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">manageInventory()</code> function, passing only the relevant float field by reference — no duplication across five nearly-identical branches.
       </p>
       <div class="code-block">
-        <div class="code-header">
+        <div class="code-common">
           <span class="code-filename">main.cpp</span>
           <span class="code-lang">C++</span>
         </div>
@@ -192,7 +192,7 @@
         Every <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">cin</code> call is guarded: if the stream enters a fail state, the error is cleared and the bad input is discarded before prompting again. Numeric range is validated separately in <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">validate.cpp</code>.
       </p>
       <div class="code-block">
-        <div class="code-header">
+        <div class="code-common">
           <span class="code-filename">perform_transaction.cpp</span>
           <span class="code-lang">C++</span>
         </div>
@@ -217,7 +217,7 @@
         Deposit and withdrawal rules live in their own functions in <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">validate.cpp</code>. Both return a boolean and take only the amount and current balance as arguments, making them independently testable with no side effects.
       </p>
       <div class="code-block">
-        <div class="code-header">
+        <div class="code-common">
           <span class="code-filename">validate.cpp</span>
           <span class="code-lang">C++</span>
         </div>
@@ -241,7 +241,7 @@
         The project ships with both a <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">Makefile</code> and a shell script so it can be compiled and run in a single command either way.
       </p>
       <div class="code-block">
-        <div class="code-header">
+        <div class="code-common">
           <span class="code-filename">terminal</span>
           <span class="code-lang">Shell</span>
         </div>

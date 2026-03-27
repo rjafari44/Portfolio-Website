@@ -466,14 +466,14 @@
       </p>
 
       <!-- Shared header -->
-      <h3>Shared Header — myheader.h</h3>
+      <h3>Shared Header — common.h</h3>
       <p>
         All pin definitions, motor objects, and global configuration constants are centralized here. Both firmware modes include this header, keeping configuration in one place and avoiding duplication across files.
       </p>
 
       <div class="code-block">
         <div class="code-header">
-          <span class="code-filename">myheader.h</span>
+          <span class="code-filename">common.h</span>
           <span class="code-lang">C++</span>
         </div>
         <pre><span class="pp">#pragma once</span>
@@ -524,7 +524,7 @@
           <span class="code-filename">moveMotors.cpp</span>
           <span class="code-lang">C++</span>
         </div>
-        <pre><span class="pp">#include</span> <span class="str">"myheader.h"</span>
+        <pre><span class="pp">#include</span> <span class="str">"common.h"</span>
 
 <span class="kw">void</span> <span class="fn">moveMotors</span>(<span class="tp">int</span> dir) {
   <span class="tp">int</span> scaledStep = STEP_SCALE * dir;
@@ -601,7 +601,7 @@
           <span class="code-filename">manual_control.ino</span>
           <span class="code-lang">Arduino / C++</span>
         </div>
-        <pre><span class="pp">#include</span> <span class="str">"myheader.h"</span>
+        <pre><span class="pp">#include</span> <span class="str">"common.h"</span>
 
 <span class="kw">void</span> <span class="fn">setup</span>() {
   Serial.begin(<span class="num">115200</span>);
@@ -692,7 +692,7 @@
           <span class="code-filename">gesture_control.ino</span>
           <span class="code-lang">Arduino / C++</span>
         </div>
-        <pre><span class="pp">#include</span> <span class="str">"myheader.h"</span>
+        <pre><span class="pp">#include</span> <span class="str">"common.h"</span>
 
 <span class="kw">void</span> <span class="fn">setup</span>() {
   Serial.begin(<span class="num">115200</span>);
