@@ -291,7 +291,7 @@
         The audio used for testing was a short recording of my own voice.
       </p>
 
-      <img src="../../assets/LTI_System_block_diagram.png" alt="LTI Block Diagram" style="width:100%; border-radius:3px; margin: 1.5rem 0; display:block; border: 1px solid #e0deda;" />
+      <img src="../../assets/audio_filtering/LTI_System_block_diagram.png" alt="LTI Block Diagram" style="width:100%; border-radius:3px; margin: 1.5rem 0; display:block; border: 1px solid #e0deda;" />
     </div>
 
     <!-- PROBLEM DEFINITION -->
@@ -402,7 +402,7 @@ freqs = np.fft.fftfreq(len(signal_noisy), 1 / sample_rate)
         added Gaussian noise.
       </p>
 
-      <img src="../../assets/time_domain_clean_vs_noisy.png" alt="Time-domain: clean vs noisy" style="width:100%; border-radius:3px; margin: 1.5rem 0; display:block; border: 1px solid #e0deda;" />
+      <img src="../../assets/audio_filtering/time_domain_clean_vs_noisy.png" alt="Time-domain: clean vs noisy" style="width:100%; border-radius:3px; margin: 1.5rem 0; display:block; border: 1px solid #e0deda;" />
 
       <p>
         <strong style="font-weight:500;color:var(--ink);">Time-domain — clean vs filtered.</strong>
@@ -411,7 +411,7 @@ freqs = np.fft.fftfreq(len(signal_noisy), 1 / sample_rate)
         a trade-off of the moving-average approach.
       </p>
 
-      <img src="../../assets/time_domain_clean_vs_filtered.png" alt="Time-domain: clean vs filtered" style="width:100%; border-radius:3px; margin: 1.5rem 0; display:block; border: 1px solid #e0deda;" />
+      <img src="../../assets/audio_filtering/time_domain_clean_vs_filtered.png" alt="Time-domain: clean vs filtered" style="width:100%; border-radius:3px; margin: 1.5rem 0; display:block; border: 1px solid #e0deda;" />
 
       <p>
         <strong style="font-weight:500;color:var(--ink);">Frequency-domain — clean vs noisy.</strong>
@@ -420,7 +420,7 @@ freqs = np.fft.fftfreq(len(signal_noisy), 1 / sample_rate)
         higher frequencies.
       </p>
 
-      <img src="../../assets/frequency_domain_clean_vs_noisy.png" alt="frequency-domain: clean vs noisy" style="width:100%; border-radius:3px; margin: 1.5rem 0; display:block; border: 1px solid #e0deda;" />
+      <img src="../../assets/audio_filtering/frequency_domain_clean_vs_noisy.png" alt="frequency-domain: clean vs noisy" style="width:100%; border-radius:3px; margin: 1.5rem 0; display:block; border: 1px solid #e0deda;" />
 
       <p>
         <strong style="font-weight:500;color:var(--ink);">Frequency-domain — clean vs filtered.</strong>
@@ -430,7 +430,7 @@ freqs = np.fft.fftfreq(len(signal_noisy), 1 / sample_rate)
         ripple pattern across the spectrum — a known characteristic of this filter type.
       </p>
 
-      <img src="../../assets/frequency_domain_clean_vs_filtered.png" alt="frequency-domain: clean vs noisy" style="width:100%; border-radius:3px; margin: 1.5rem 0; display:block; border: 1px solid #e0deda;" />
+      <img src="../../assets/audio_filtering/frequency_domain_clean_vs_filtered.png" alt="frequency-domain: clean vs noisy" style="width:100%; border-radius:3px; margin: 1.5rem 0; display:block; border: 1px solid #e0deda;" />
     </div>
 
     <!-- WHAT I LEARNED -->
