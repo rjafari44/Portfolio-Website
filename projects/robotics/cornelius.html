@@ -319,7 +319,9 @@
         <pre><span class="cm">// Run obstacle avoidance only if an obstacle is detected</span>
 <span class="kw">if</span> (obstacleDetected) {
   <span class="fn">stopMotors</span>();
+  
 
+  delay(<span class="num">200</span>);
   <span class="fn">moveBackward</span>();
   delay(<span class="num">300</span>);
   <span class="fn">stopMotors</span>();
