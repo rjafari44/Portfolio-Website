@@ -392,9 +392,28 @@
 
     <hr class="divider">
 
+    <!-- PARTS -->
+    <div class="section-block">
+      <p class="section-label">01 — Parts List</p>
+      <h2>Hardware & Components</h2>
+      <p>
+        Epione is built on the open-source Arctos platform. The full official parts list — including all structural hardware, electronics, fasteners, and recommended suppliers — is maintained on the Arctos website and kept up to date with the latest revision of the design.
+      </p>
+      <a href="https://arctosrobotics.com/bom/" target="_blank"
+        style="display:inline-flex;align-items:center;gap:0.6rem;font-family:var(--mono);font-size:0.72rem;letter-spacing:0.1em;color:var(--ink);text-decoration:none;border:1px solid var(--border);padding:0.75rem 1.25rem;border-radius:3px;transition:border-color 0.2s,color 0.2s;margin-bottom:2rem;"
+        onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
+        onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink)'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        View full parts list on arctosrobotics.com
+      </a>
+      <p>Key electronics integrated into this build include TMC2209 stepper drivers, NEMA 17 stepper motors, an Arduino Mega, and a custom wired power distribution system. The end effector and any project-specific modifications are detailed in the Mechanical section below.</p>
+    </div>
+
+    <hr class="divider">
+
     <!-- MECHANICAL -->
     <div class="section-block">
-      <p class="section-label">01 — Mechanical</p>
+      <p class="section-label">02 — Mechanical</p>
       <h2>Structure & End Effector</h2>
       <p>
         All structural components were 3D printed in PLA+ with settings tuned for both rigidity and print reliability. Assembly was more involved than anticipated — provided instructions had gaps and skipped steps, so the CAD STEP file and video references were used extensively throughout. Cover plates were intentionally omitted to maintain continuous access to wiring during development and troubleshooting. Lubricant was applied to all gear interfaces to prevent binding.
@@ -424,7 +443,7 @@
 
     <!-- ELECTRICAL -->
     <div class="section-block">
-      <p class="section-label">02 — Electrical</p>
+      <p class="section-label">03 — Electrical</p>
       <h2>Wiring Architecture</h2>
       <p>
         The electrical system was implemented with flexibility in mind — specific pin mappings are not enforced since different builds may require different configurations. Two CNC motor shields stacked on an Arduino Mega provide eight motor ports total, six of which drive the arm's stepper motors. The servo is powered separately through a buck converter for regulated voltage.
@@ -458,7 +477,7 @@
 
     <!-- PROGRAMMING -->
     <div class="section-block">
-      <p class="section-label">03 — Programming</p>
+      <p class="section-label">04 — Programming</p>
       <h2>Dual-Mode Control Software</h2>
       <p>
         The software stack spans both Arduino (C++) and Python, implementing two entirely independent control modes. The shared header and motor abstraction layer keeps firmware clean and mode-agnostic. Each mode is uploaded and run independently — no switching at runtime.
@@ -807,7 +826,7 @@ cap.release(); ser.close(); cv2.destroyAllWindows()</pre>
 
     <!-- USAGE -->
     <div class="section-block">
-      <p class="section-label">04 — Usage</p>
+      <p class="section-label">05 — Usage</p>
       <h2>Running the System</h2>
       <p>
         The project targets Linux with Arduino CLI. Shell scripts handle compilation and upload to <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">/dev/ttyACM0</code> — if your board uses a different port, update both the shell scripts and the Python serial connection string. CDC on boot is enabled by default. The two modes are fully independent; upload the appropriate firmware before running.
@@ -851,7 +870,7 @@ pyserial==<span class="num">3.5</span></pre>
 
     <!-- TEAM -->
     <div class="section-block">
-      <p class="section-label">05 — Team</p>
+      <p class="section-label">06 — Team</p>
       <h2>Collaborators</h2>
       <p>
         This project was a collaborative university effort. The work below would not have been possible without the full team's contributions across mechanical design, assembly, electrical integration, and software.
