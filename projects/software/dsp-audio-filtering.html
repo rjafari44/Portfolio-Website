@@ -137,7 +137,7 @@
       </p>
     </div>
 
-    <img src="../../assets/audio_filtering/LTI_System_block_diagram.png" alt="LTI Block Diagram" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;border:1px solid var(--border);" />
+    <img src="../../assets/audio_filtering/System-block-diagram.png" alt="LTI Block Diagram" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;border:1px solid var(--border);" />
 
     <hr class="divider">
 
@@ -244,25 +244,25 @@ freqs = np.fft.<span class="fn">fftfreq</span>(<span class="fn">len</span>(signa
       <p>
         The noisy signal retains the same overall waveform shape as the clean signal, but shows a noticeably increased amplitude spread across all samples due to the added Gaussian noise.
       </p>
-      <img src="../../assets/audio_filtering/time_domain_clean_vs_noisy.png" alt="Time-domain: clean vs noisy" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;border:1px solid var(--border);" />
+      <img src="../../assets/audio_filtering/time-domain-clean-vs-noisy.png" alt="Time-domain: clean vs noisy" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;border:1px solid var(--border);" />
 
       <h3>Time-Domain — Clean vs Filtered</h3>
       <p>
         After filtering, the amplitude spread is significantly reduced compared to the noisy signal, though it does not fully return to the clean signal's amplitude — a trade-off of the moving-average approach.
       </p>
-      <img src="../../assets/audio_filtering/time_domain_clean_vs_filtered.png" alt="Time-domain: clean vs filtered" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;border:1px solid var(--border);" />
+      <img src="../../assets/audio_filtering/time-domain-clean-vs-filtered.png" alt="Time-domain: clean vs filtered" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;border:1px solid var(--border);" />
 
       <h3>Frequency-Domain — Clean vs Noisy</h3>
       <p>
         On a logarithmic scale, the noisy signal shows a larger spread of magnitudes and an elevated noise floor that persists across higher frequencies.
       </p>
-      <img src="../../assets/audio_filtering/frequency_domain_clean_vs_noisy.png" alt="Frequency-domain: clean vs noisy" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;border:1px solid var(--border);" />
+      <img src="../../assets/audio_filtering/frequency-domain-clean-vs-noisy.png" alt="Frequency-domain: clean vs noisy" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;border:1px solid var(--border);" />
 
       <h3>Frequency-Domain — Clean vs Filtered</h3>
       <p>
         The filtered signal's magnitude range closely matches the clean signal, but introduces periodic nulls caused by the zeros of the moving-average filter's frequency response — a known characteristic of this filter type.
       </p>
-      <img src="../../assets/audio_filtering/frequency_domain_clean_vs_filtered.png" alt="Frequency-domain: clean vs filtered" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;border:1px solid var(--border);" />
+      <img src="../../assets/audio_filtering/frequency-domain-clean-vs-filtered.png" alt="Frequency-domain: clean vs filtered" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;border:1px solid var(--border);" />
     </div>
 
     <hr class="divider">
