@@ -274,35 +274,9 @@
 
     <hr class="divider">
 
-    <!-- BOM -->
-    <div class="section-block">
-      <p class="section-label">02 — Bill of Materials</p>
-      <h2>Components</h2>
-      <p>A complete list of hardware used across the locomotion, adhesion, power, and control subsystems.</p>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>Component</th><th>Part</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Drive Motors</td><td>4× DC 3–6V TT Dual Shaft Gear Motor w/ 65×26mm Plastic Tire Wheel</td></tr>
-            <tr><td>Wheel ESC</td><td>YoungRC 30A Brushed ESC w/ Brake</td></tr>
-            <tr><td>Fan</td><td>7″ Tri-Blade Fan</td></tr>
-            <tr><td>Fan Motor</td><td>Hyperion 2204 2100KV CW Motor w/ Built-In 30A BLHeli ESC</td></tr>
-            <tr><td>Battery</td><td>SIGP 1100mAh 14.8V 120C 4S LiPo</td></tr>
-            <tr><td>Radio System</td><td>2.4GHz 3CH RC Transmitter &amp; Receiver</td></tr>
-            <tr><td>Frame Material</td><td>Laser-Cut Acrylic</td></tr>
-            <tr><td>Shroud Material</td><td>3D Printed PLA</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <hr class="divider">
-
     <!-- MECHANICAL -->
     <div class="section-block">
-      <p class="section-label">03 — Mechanical</p>
+      <p class="section-label">02 — Mechanical</p>
       <h2>Chassis, Shroud & Assembly</h2>
       <p>
         The frame is laser-cut from acrylic sheet, chosen for its rigidity, low weight, and ease of fabrication. The shroud — the sealed enclosure that channels airflow from the fan to create suction against the wall — is 3D printed in PLA. Together they form a compact platform that keeps the center of mass as close to the wall surface as possible to minimize the tipping moment during climbing.
@@ -319,31 +293,13 @@
       <h3>CAD Assembly</h3>
       <img src="../../assets/wall-climber/wall-climber-assembly.png" alt="CAD assembly" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;" />
 
-      <h3>Physical Dimensions</h3>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>Dimension</th><th>Value</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Length</td><td>270 mm</td></tr>
-            <tr><td>Width</td><td>235 mm</td></tr>
-            <tr><td>Height (without wheels)</td><td>38 mm</td></tr>
-            <tr><td>Height (with wheels)</td><td>64.5 mm</td></tr>
-            <tr><td>Wheel Diameter</td><td>64.5 mm</td></tr>
-            <tr><td>Ground Clearance</td><td>18 mm</td></tr>
-            <tr><td>Chassis Weight</td><td>106.10 g</td></tr>
-            <tr><td>Overall Weight</td><td>668.21 g</td></tr>
-          </tbody>
-        </table>
-      </div>
     </div>
 
     <hr class="divider">
 
     <!-- ELECTRICAL -->
     <div class="section-block">
-      <p class="section-label">04 — Electrical & Power</p>
+      <p class="section-label">03 — Electrical & Power</p>
       <h2>Power System</h2>
       <p>
         The robot is powered by a single 4S LiPo battery delivering 14.8V with a 120C discharge rating — providing ample current headroom for both the brushless fan motor and the four brushed drive motors running simultaneously. Two separate ESCs manage the two subsystems independently, both receiving control signals from the 2.4GHz receiver.
@@ -360,7 +316,7 @@
 
     <!-- DESIGN CHALLENGES -->
     <div class="section-block">
-      <p class="section-label">05 — Design Challenges</p>
+      <p class="section-label">04 — Design Challenges</p>
       <h2>Engineering Constraints</h2>
       <p>
         Vertical locomotion introduces a set of constraints that don't exist for ground robots. Every gram of weight works directly against the adhesion force, so the design required careful balance between suction output and total mass — particularly with a 4S LiPo and brushless motor system adding significant weight.
@@ -378,7 +334,7 @@
 
     <!-- DEMO VIDEO -->
     <div class="section-block">
-      <p class="section-label">06 — Demo</p>
+      <p class="section-label">05 — Demo</p>
       <h2>In Action</h2>
 
       <video src="../../assets/wall-climber/wall-climber-action.mp4" controls style="width:50%; display:block; margin:0 auto; border-radius:3px;"></video>

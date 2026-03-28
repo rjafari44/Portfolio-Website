@@ -268,40 +268,9 @@
 
     <hr class="divider">
 
-    <!-- BOM -->
-    <div class="section-block">
-      <p class="section-label">01 — Bill of Materials</p>
-      <h2>Components</h2>
-      <p>A complete list of hardware used across the chassis, electrical, and sensor subsystems.</p>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>Component</th><th>Part</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Microcontroller</td><td>Arduino Nano</td></tr>
-            <tr><td>Distance Sensor</td><td>HC-SR04 Ultrasonic Distance Sensor</td></tr>
-            <tr><td>Drive Motors</td><td>2× TT DC Gear Motor</td></tr>
-            <tr><td>Wheels</td><td>2× TT Motor Wheels</td></tr>
-            <tr><td>Motor Driver</td><td>L298N</td></tr>
-            <tr><td>Servo</td><td>Micro Servo (MG90 used; SG90 recommended)</td></tr>
-            <tr><td>Power</td><td>2× 18650 Li-ion Batteries w/ Holder</td></tr>
-            <tr><td>Capacitor</td><td>470 µF 16V Electrolytic</td></tr>
-            <tr><td>Connector</td><td>Two Port Screw Terminal</td></tr>
-            <tr><td>Prototyping</td><td>Breadboard &amp; Dupont Jumper Wires</td></tr>
-            <tr><td>Chassis &amp; Wheels</td><td>3D Printed PLA (custom design)</td></tr>
-            <tr><td>Fasteners</td><td>Zipties, Screws, Washers, Nails</td></tr>
-            <tr><td>Other</td><td>Electrical Tape (servo fitment)</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <hr class="divider">
-
     <!-- MECHANICAL -->
     <div class="section-block">
-      <p class="section-label">02 — Mechanical</p>
+      <p class="section-label">01 — Mechanical</p>
       <h2>Chassis & Assembly</h2>
       <p>
         The chassis is custom-designed and printed in PLA. The wheels are inspired by a design from Prof. Wolken at Irvine Valley College. The chassis includes ziptie routing holes for motors and wiring, a servo bracket, and mounting tabs for the breadboard, motor driver, and battery holder.
@@ -320,7 +289,7 @@
 
     <!-- ELECTRICAL -->
     <div class="section-block">
-      <p class="section-label">03 — Electrical</p>
+      <p class="section-label">02 — Electrical</p>
       <h2>Power & Wiring</h2>
       <p>
         Powered by two 18650 Li-ion batteries in series (~8 V total). The Arduino Nano and L298N motor driver have built-in 5 V regulators which power the HC-SR04 and servo. A 470 µF capacitor across the power rail smooths voltage spikes from motor switching.
@@ -338,7 +307,7 @@
 
     <!-- SOFTWARE -->
     <div class="section-block">
-      <p class="section-label">04 — Software</p>
+      <p class="section-label">03 — Software</p>
       <h2>How It Works</h2>
       <p>
         The main loop continuously reads distance from the ultrasonic sensor. If the path is clear it drives forward. When an obstacle is detected within 20 cm, it stops, backs up briefly, then sweeps the servo left and right to measure clearance on both sides before turning toward the more open direction.
@@ -393,7 +362,7 @@
 
     <!-- Demo -->
     <div class="section-block">
-    <p class="section-label">05 — Demo</p>
+    <p class="section-label">04 — Demo</p>
     <h2>In Action</h2>
     
     <video src="../../assets/" controls style="width:50%; display:block; margin:0 auto; border-radius:3px;"></video>
@@ -404,7 +373,7 @@
 
     <!-- REFLECTION -->
     <div class="section-block">
-      <p class="section-label">06 — Reflection</p>
+      <p class="section-label">05 — Reflection</p>
       <h2>What I Learned</h2>
       <p>
         This project sharpened my ability to write clean embedded C++ under tight hardware constraints, think through edge cases in autonomous behavior, and debug physical systems where software issues and mechanical issues can look identical. Structuring the code across multiple <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">.cpp</code> files with a shared header was also good practice for keeping embedded projects organized.

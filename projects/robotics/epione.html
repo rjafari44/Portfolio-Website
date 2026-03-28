@@ -392,44 +392,13 @@
 
     <hr class="divider">
 
-    <!-- PARTS -->
-    <div class="section-block">
-      <p class="section-label">01 — Parts List</p>
-      <h2>Hardware & Components</h2>
-      <p>
-        Epione is built on the open-source Arctos platform. The full official parts list — including all structural hardware, electronics, fasteners, and recommended suppliers — is maintained on the Arctos website and kept up to date with the latest revision of the design.
-      </p>
-      <a href="https://arctosrobotics.com/bom/" target="_blank"
-        style="display:inline-flex;align-items:center;gap:0.6rem;font-family:var(--mono);font-size:0.72rem;letter-spacing:0.1em;color:var(--ink);text-decoration:none;border:1px solid var(--border);padding:0.75rem 1.25rem;border-radius:3px;transition:border-color 0.2s,color 0.2s;margin-bottom:2rem;"
-        onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
-        onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink)'">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        View full parts list on arctosrobotics.com
-      </a>
-      <p>Key electronics integrated into this build include TMC2209 stepper drivers, NEMA 17 stepper motors, an Arduino Mega, and a custom wired power distribution system. The end effector and any project-specific modifications are detailed in the Mechanical section below.</p>
-    </div>
-
-    <hr class="divider">
-
     <!-- MECHANICAL -->
     <div class="section-block">
-      <p class="section-label">02 — Mechanical</p>
+      <p class="section-label">01 — Mechanical</p>
       <h2>Structure & End Effector</h2>
       <p>
         All structural components were 3D printed in PLA+ with settings tuned for both rigidity and print reliability. Assembly was more involved than anticipated — provided instructions had gaps and skipped steps, so the CAD STEP file and video references were used extensively throughout. Cover plates were intentionally omitted to maintain continuous access to wiring during development and troubleshooting. Lubricant was applied to all gear interfaces to prevent binding.
       </p>
-
-      <h3>Print Settings</h3>
-      <div class="specs-grid">
-        <div class="spec-cell"><div class="sc-key">Infill — Structural</div><div class="sc-val">25%</div></div>
-        <div class="spec-cell"><div class="sc-key">Infill — Small Gears</div><div class="sc-val">30–35%</div></div>
-        <div class="spec-cell"><div class="sc-key">Layer Height</div><div class="sc-val">0.15 mm</div></div>
-        <div class="spec-cell"><div class="sc-key">Top Shells</div><div class="sc-val">7 layers (min 0.7 mm)</div></div>
-        <div class="spec-cell"><div class="sc-key">Bottom Shells</div><div class="sc-val">5 layers (min 0.5 mm)</div></div>
-        <div class="spec-cell"><div class="sc-key">Vertical Shells</div><div class="sc-val">2 perimeters</div></div>
-        <div class="spec-cell"><div class="sc-key">Supports</div><div class="sc-val">Enabled (overhangs)</div></div>
-        <div class="spec-cell"><div class="sc-key">Brim</div><div class="sc-val">Gears only</div></div>
-      </div>
 
       <h3>Custom End Effector</h3>
       <p>
@@ -443,30 +412,16 @@
 
     <!-- ELECTRICAL -->
     <div class="section-block">
-      <p class="section-label">03 — Electrical</p>
+      <p class="section-label">02 — Electrical</p>
       <h2>Wiring Architecture</h2>
       <p>
         The electrical system was implemented with flexibility in mind — specific pin mappings are not enforced since different builds may require different configurations. Two CNC motor shields stacked on an Arduino Mega provide eight motor ports total, six of which drive the arm's stepper motors. The servo is powered separately through a buck converter for regulated voltage.
       </p>
 
-      <h3>Core Components</h3>
-      <ul>
-        <li>Microcontroller: Arduino Mega</li>
-        <li>Motor control: Two CNC motor shields (8 ports total, 6 used)</li>
-        <li>Drivers: TMC2209 stepper motor drivers</li>
-        <li>Stepper supply: 24V</li>
-        <li>Servo supply: 4.8–8.4V via buck converter</li>
-        <li>Cooling: One fan installed in the base electronics housing</li>
-      </ul>
-
       <h3>Limit Switches</h3>
       <p>
         The original Arctos design includes magnetically activated limit switches. These were intentionally omitted due to wiring complexity, observed unreliability, and added assembly overhead. The system operates open-loop — no encoder feedback or closed-loop position verification. Safe operation relies on slow motor speeds and manual visual checks.
       </p>
-
-      <div class="callout">
-        <strong>Upload note:</strong> Disconnect motor power before uploading firmware. Leaving motor power enabled during upload may cause unintended motor jitter.
-      </div>
 
       <p>The schematic below is a simplified version of the official Arctos electrical diagram, trimmed to only the necessary pins. The gesture control mode uses an identical wiring layout — the joystick remains connected but is simply unused.</p>
 
@@ -477,59 +432,11 @@
 
     <!-- PROGRAMMING -->
     <div class="section-block">
-      <p class="section-label">04 — Programming</p>
+      <p class="section-label">03 — Programming</p>
       <h2>Dual-Mode Control Software</h2>
       <p>
         The software stack spans both Arduino (C++) and Python, implementing two entirely independent control modes. The shared header and motor abstraction layer keeps firmware clean and mode-agnostic. Each mode is uploaded and run independently — no switching at runtime.
       </p>
-
-      <!-- Shared header -->
-      <h3>Shared Header — common.h</h3>
-      <p>
-        All pin definitions, motor objects, and global configuration constants are centralized here. Both firmware modes include this header, keeping configuration in one place and avoiding duplication across files.
-      </p>
-
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-filename">common.h</span>
-          <span class="code-lang">C++</span>
-        </div>
-        <pre><span class="pp">#pragma once</span>
-
-<span class="pp">#include</span> <span class="str">&lt;AccelStepper.h&gt;</span>  <span class="cm">// library for stepper motors</span>
-<span class="pp">#include</span> <span class="str">&lt;Servo.h&gt;</span>         <span class="cm">// library for servo motor</span>
-
-<span class="cm">// ---------------- Pin Definitions ----------------</span>
-<span class="kw">constexpr</span> <span class="tp">int</span> M1_STEP{<span class="num">44</span>};  M1_DIR{<span class="num">45</span>};
-<span class="kw">constexpr</span> <span class="tp">int</span> M2_STEP{<span class="num">42</span>};  M2_DIR{<span class="num">43</span>};
-<span class="kw">constexpr</span> <span class="tp">int</span> M3_STEP{<span class="num">40</span>};  M3_DIR{<span class="num">41</span>};
-<span class="kw">constexpr</span> <span class="tp">int</span> M4_STEP{<span class="num">38</span>};  M4_DIR{<span class="num">39</span>};
-<span class="kw">constexpr</span> <span class="tp">int</span> M5_STEP{<span class="num">36</span>};  M5_DIR{<span class="num">37</span>};
-<span class="kw">constexpr</span> <span class="tp">int</span> M6_STEP{<span class="num">34</span>};  M6_DIR{<span class="num">35</span>};
-<span class="kw">constexpr</span> <span class="tp">int</span> SERVO_PIN{<span class="num">6</span>};
-<span class="kw">constexpr</span> <span class="tp">int</span> JOY_VX{A2};  JOY_SW{<span class="num">7</span>};
-
-<span class="kw">inline</span> Servo motor7;
-
-<span class="kw">inline</span> AccelStepper motors[<span class="num">6</span>] = {
-  AccelStepper(AccelStepper::DRIVER, M1_STEP, M1_DIR),
-  AccelStepper(AccelStepper::DRIVER, M2_STEP, M2_DIR),
-  AccelStepper(AccelStepper::DRIVER, M3_STEP, M3_DIR),
-  AccelStepper(AccelStepper::DRIVER, M4_STEP, M4_DIR),
-  AccelStepper(AccelStepper::DRIVER, M5_STEP, M5_DIR),
-  AccelStepper(AccelStepper::DRIVER, M6_STEP, M6_DIR)
-};
-
-<span class="kw">constexpr</span> <span class="tp">int</span> MAX_STEPPER_SPEED{<span class="num">1000</span>};
-<span class="kw">constexpr</span> <span class="tp">int</span> MAX_STEPPER_ACCEL{<span class="num">800</span>};
-<span class="kw">constexpr</span> <span class="tp">int</span> STEP_SCALE{<span class="num">60</span>};
-<span class="kw">constexpr</span> <span class="tp">int</span> DEAD_ZONE{<span class="num">40</span>};
-<span class="kw">constexpr</span> <span class="tp">float</span> SERVO_MAX_SPEED{<span class="num">60.0</span>};
-<span class="kw">constexpr</span> <span class="tp">int</span>   SERVO_DEAD_ZONE{<span class="num">60</span>};
-
-<span class="kw">inline</span> <span class="tp">int</span>   currentMode{<span class="num">1</span>};
-<span class="kw">inline</span> <span class="tp">float</span> servoPosition{<span class="num">90.0</span>};</pre>
-      </div>
 
       <!-- moveMotors -->
       <h3>Motor Abstraction — moveMotors.cpp</h3>
@@ -811,7 +718,7 @@ cap.release(); ser.close(); cv2.destroyAllWindows()</pre>
 
     <!-- Demo Video -->
     <div class="section-block">
-      <p class="section-label">05 — Demo</p>
+      <p class="section-label">04 — Demo</p>
       <h2>Manual Control In Action</h2>
 
       <!-- Demo video — manual -->
@@ -837,7 +744,7 @@ cap.release(); ser.close(); cv2.destroyAllWindows()</pre>
 
     <!-- TEAM -->
     <div class="section-block">
-      <p class="section-label">06 — Team</p>
+      <p class="section-label">05 — Team</p>
       <h2>Collaborators</h2>
       <p>
         This project was a collaborative university effort. The work below would not have been possible without the full team's contributions across mechanical design, assembly, electrical integration, and software.
