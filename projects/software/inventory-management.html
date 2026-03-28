@@ -233,32 +233,9 @@
 
     <hr class="divider">
 
-    <!-- BUILDING & RUNNING -->
-    <div class="section-block">
-      <p class="section-label">03 — Building & Running</p>
-      <h2>Compilation & Execution</h2>
-      <p>
-        The project ships with both a <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">Makefile</code> and a shell script so it can be compiled and run in a single command either way.
-      </p>
-      <div class="code-block">
-        <div class="code-common">
-          <span class="code-filename">terminal</span>
-          <span class="code-lang">Shell</span>
-        </div>
-        <pre><span class="cm"># Using Make</span>
-make
-make clean   <span class="cm"># clean up compiled artifacts when done</span>
-
-<span class="cm"># Using the shell script (chmod first if needed)</span>
-./run.sh</pre>
-      </div>
-    </div>
-
-    <hr class="divider">
-
     <!-- REFLECTION -->
     <div class="section-block">
-      <p class="section-label">04 — Reflection</p>
+      <p class="section-label">03 — Reflection</p>
       <h2>What I Learned</h2>
       <p>
         The biggest takeaway was how much clarity you get from splitting a program into focused files early — even in a small project. Having <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">validate.cpp</code> contain nothing but two pure functions made it trivial to audit the correctness of the deposit and withdrawal logic in isolation.
