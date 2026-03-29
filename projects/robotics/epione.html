@@ -681,7 +681,7 @@ state = STATE_IDLE; selected_motor = <span class="kw">None</span>
 
 <span class="cm"># --- Config ---</span>
 STABLE_FRAMES   = <span class="num">8</span>    <span class="cm"># consecutive frames for gesture confirmation</span>
-TRIGGER_HOLD    = <span class="num">4.0</span>  <span class="cm"># seconds to hold for state transition</span>
+TRIGGER_HOLD    = <span class="num">5.0</span>  <span class="cm"># seconds to hold for state transition</span>
 SELECTION_DELAY = <span class="num">2.0</span>  <span class="cm"># countdown after motor selection</span>
 gesture_buffer  = deque(maxlen=STABLE_FRAMES)
 
